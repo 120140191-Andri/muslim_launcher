@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:muslim_launcher/view/bacaAlQuran.dart';
 import 'package:muslim_launcher/view/menuApps.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,7 +57,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 30),
                 const WidgetCardHistoryAyat(),
                 SizedBox(
-                  height: ukuranLayar.height - 570,
+                  height: ukuranLayar.height - 610,
                   width: ukuranLayar.width,
                 ),
                 const MenuBawah(),
@@ -112,6 +113,9 @@ class WidgetJumlahPoin extends StatelessWidget {
   @override
   Widget build(context) {
     // Access the updated count variable
+
+    final ControllerListApps cApps = Get.put(ControllerListApps());
+
     return Center(
       child: Row(
         children: [
@@ -124,14 +128,16 @@ class WidgetJumlahPoin extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          Text(
-            '5 Poin',
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF32B641),
+          Obx(
+            () => Text(
+              '${cApps.poinSt.value} Poin',
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF32B641),
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -144,55 +150,74 @@ class WidgetCardHistoryAyat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      width: 220,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF32B641),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/img/icon-arrow.png',
-                height: 22,
-                width: 22,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                "Baca Ayat Al - Qur’an",
-                style: GoogleFonts.montserrat(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+    final ControllerListApps cApps = Get.put(ControllerListApps());
+
+    return GestureDetector(
+      onTap: () {
+        cApps.ambilApp();
+        Get.to(() => const BacaAlQuran());
+      },
+      child: Container(
+        height: 140,
+        width: 240,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF32B641),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/img/icon-arrow.png',
+                  height: 22,
+                  width: 22,
                 ),
-              )
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Ayat yang telah dibaca:',
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+                const SizedBox(width: 10),
+                Text(
+                  "Baca Ayat Al - Qur’an",
+                  style: GoogleFonts.montserrat(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                )
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Al - Baqarah(2) : 30 - 35',
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
+            const SizedBox(height: 28),
+            Text(
+              'Surat yang terakhir dibaca:',
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
-          )
-        ],
+            const SizedBox(height: 4),
+            Obx(
+              () => cApps.suratSt.value != ''
+                  ? Text(
+                      '${cApps.suratSt.value}(${cApps.ayatSt.value})',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      'Belum Ada',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
