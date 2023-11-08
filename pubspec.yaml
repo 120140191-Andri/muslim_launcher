@@ -45,6 +45,9 @@ dependencies:
   super_rich_text: ^1.0.0
   auto_size_text: ^3.0.0
   fluttertoast: ^8.2.2
+  speech_to_text: ^6.4.0
+  avatar_glow: ^2.0.2
+  string_similarity: ^2.0.0
 
 dev_dependencies:
   flutter_test:

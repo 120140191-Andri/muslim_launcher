@@ -6,6 +6,10 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 class ControllerWaktu extends GetxController {
   var jamSekarang = DateFormat('h:mm a').format(DateTime.now()).obs;
@@ -99,12 +103,48 @@ class ControllerQuran extends GetxController {
   var deskripsiSuratDipilih = ''.obs;
   RxList listSuratDipilih = [].obs;
   var suratDipilih = 0.obs;
+  var ayatDipilih = 0.obs;
+
+  SpeechToText speechToText = SpeechToText();
+  var speechEn = false.obs;
+  var kataAkhir = ''.obs;
 
   @override
   void onInit() {
     // Get called when controller is created
     super.onInit();
     bacaJsonSurah();
+    initSpeech();
+  }
+
+  void initSpeech() async {
+    speechEn.value = await speechToText.initialize();
+  }
+
+  void startListening() async {
+    await speechToText.listen(onResult: onSpeechResult);
+  }
+
+  void onSpeechResult(SpeechRecognitionResult result) {
+    if (result.recognizedWords != '') {
+      kataAkhir.value = result.recognizedWords;
+      var ayat = listSuratDipilih[ayatDipilih.value -= 1]['teksLatin'];
+      analisa(ayat);
+    }
+  }
+
+  void analisa(ayat) {
+    var hasil = kataAkhir.value.similarityTo(ayat);
+    prinhasil(hasil);
+  }
+
+  void prinhasil(has) {
+    print("$has || ${kataAkhir.value} ||");
+  }
+
+  void stopListening() async {
+    await speechToText.stop();
+    print('berhenti');
   }
 
   void bacaJsonSurah() async {
@@ -129,5 +169,8 @@ class ControllerQuran extends GetxController {
     listSuratDipilih.value = data['data']['ayat'];
   }
 
-  void selesaiBaca(noSurat, noAyat) async {}
+  void selesaiBaca(noSurat, noAyat) async {
+    ayatDipilih.value = noAyat;
+    startListening();
+  }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:muslim_launcher/view/bacaAlQuran.dart';
+import 'package:muslim_launcher/view/homequran.dart';
 import 'package:muslim_launcher/view/menuApps.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,8 +57,10 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 const WidgetCardHistoryAyat(),
+                const SizedBox(height: 20),
+                const WidgetCardMisi(),
                 SizedBox(
-                  height: ukuranLayar.height - 610,
+                  height: ukuranLayar.height - 760,
                   width: ukuranLayar.width,
                 ),
                 const MenuBawah(),
@@ -117,29 +120,29 @@ class WidgetJumlahPoin extends StatelessWidget {
     final ControllerListApps cApps = Get.put(ControllerListApps());
 
     return Center(
-      child: Row(
-        children: [
-          Text(
-            'Jumlah Poin: ',
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF32B641),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          Obx(
-            () => Text(
-              '${cApps.poinSt.value} Poin',
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF32B641),
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: const BoxDecoration(
+          color: Color(0xFF32B641),
+          borderRadius: BorderRadius.all(Radius.circular(14)),
+        ),
+        child: Row(
+          children: [
+            Image.asset('assets/img/Vector.png'),
+            const SizedBox(width: 4),
+            Obx(
+              () => Text(
+                cApps.poinSt.value,
+                style: GoogleFonts.montserrat(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -155,7 +158,7 @@ class WidgetCardHistoryAyat extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         cApps.ambilApp();
-        Get.to(() => const BacaAlQuran());
+        Get.to(() => const HomeQuran());
       },
       child: Container(
         height: 140,
@@ -215,6 +218,73 @@ class WidgetCardHistoryAyat extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WidgetCardMisi extends StatelessWidget {
+  const WidgetCardMisi({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ControllerListApps cApps = Get.put(ControllerListApps());
+
+    return GestureDetector(
+      onTap: () {
+        cApps.ambilApp();
+        Get.to(() => const HomeQuran());
+      },
+      child: Container(
+        height: 140,
+        width: 240,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB6A132),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/img/!.png',
+                  height: 22,
+                  width: 22,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "Misi untukmu hari ini !",
+                  style: GoogleFonts.montserrat(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 28),
+            Text(
+              'Bacalah 1 Surah',
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Bonus: 3 Poin',
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
             ),
           ],
         ),

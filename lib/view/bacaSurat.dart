@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:muslim_launcher/controller/global_controller.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class BacaSurat extends StatelessWidget {
   const BacaSurat({super.key});
