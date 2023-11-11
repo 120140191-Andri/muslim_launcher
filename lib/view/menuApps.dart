@@ -29,51 +29,56 @@ class MenuApps extends StatelessWidget {
                 () => ListView.builder(
                   itemCount: cApps.apps.length,
                   itemBuilder: (BuildContext context, int i) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (cApps.apps[i].category
-                            .toString()
-                            .contains('productivity')) {
-                          DeviceApps.openApp(cApps.apps[i].packageName);
-                        } else {
-                          var poin = int.tryParse(cApps.poinSt.value)!;
-                          if (poin >= 1) {
-                            cApps.poinSt.value = (poin - 1).toString();
-                            DeviceApps.openApp(cApps.apps[i].packageName);
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: "Poin Anda Kurang!",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0,
-                            );
-                          }
-                        }
-                      },
-                      child: ListTile(
-                        leading: Icon(
-                          (cApps.apps[i].category
-                                  .toString()
-                                  .contains('productivity'))
-                              ? Icons.lock_open
-                              : Icons.lock,
-                        ),
-                        title: Text(cApps.apps[i].appName.toString()),
-                        trailing: (cApps.apps[i].category
-                                .toString()
-                                .contains('productivity'))
-                            ? const Text('')
-                            : const Text(
-                                '-1 Poin',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
+                    return !cApps.notallowApps[i]
+                        ? GestureDetector(
+                            onTap: () {
+                              if (cApps.apps[i].category
+                                      .toString()
+                                      .contains('productivity') ||
+                                  cApps.allowApps[i]) {
+                                DeviceApps.openApp(cApps.apps[i].packageName);
+                              } else {
+                                var poin = int.tryParse(cApps.poinSt.value)!;
+                                if (poin >= 1) {
+                                  cApps.poinSt.value = (poin - 1).toString();
+                                  DeviceApps.openApp(cApps.apps[i].packageName);
+                                } else {
+                                  Fluttertoast.showToast(
+                                    msg: "Poin Anda Kurang!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                }
+                              }
+                            },
+                            child: ListTile(
+                              leading: Icon(
+                                (cApps.apps[i].category
+                                            .toString()
+                                            .contains('productivity')) ||
+                                        cApps.allowApps[i]
+                                    ? Icons.lock_open
+                                    : Icons.lock,
                               ),
-                      ),
-                    );
+                              title: Text(cApps.apps[i].appName.toString()),
+                              trailing: (cApps.apps[i].category
+                                          .toString()
+                                          .contains('productivity')) ||
+                                      cApps.allowApps[i]
+                                  ? const Text('')
+                                  : const Text(
+                                      '-1 Poin',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                            ),
+                          )
+                        : Container();
                   },
                 ),
               ),

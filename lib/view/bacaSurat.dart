@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -127,25 +127,14 @@ class BacaSurat extends StatelessWidget {
                                   onPressed: () {
                                     cQuran.selesaiBaca(
                                       cQuran.nomorSuratDipilih,
-                                      cQuran.listSuratDipilih[i]['nomorAyat'],
+                                      cQuran.listSuratDipilih[i]['nomorAyat'] -
+                                          1,
                                     );
                                     cApps.suratSt.value =
                                         cQuran.namaLatinSuratDipilih.value;
                                     cApps.ayatSt.value = cQuran
                                         .listSuratDipilih[i]['nomorAyat']
                                         .toString();
-                                    var poin =
-                                        int.tryParse(cApps.poinSt.value)! + 1;
-                                    cApps.poinSt.value = (poin).toString();
-                                    Fluttertoast.showToast(
-                                      msg: "Poin Berhasil Ditambah!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.green,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0,
-                                    );
                                   },
                                   icon: const Icon(Icons.mic_none_sharp),
                                   label: const Text('Baca'),

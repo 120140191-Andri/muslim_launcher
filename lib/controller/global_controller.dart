@@ -1,5 +1,11 @@
+// ignore_for_file: unused_import
+
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:ffi';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import 'dart:async';
@@ -9,6 +15,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 class ControllerWaktu extends GetxController {
@@ -33,6 +40,8 @@ class ControllerListApps extends GetxController {
   RxString poinSt = '0'.obs;
   RxString ayatSt = ''.obs;
   RxString suratSt = ''.obs;
+  RxList allowApps = [].obs;
+  RxList notallowApps = [].obs;
 
   // @override
   // void onInit() {
@@ -44,9 +53,10 @@ class ControllerListApps extends GetxController {
   void onReady() {
     super.onReady();
 
-    cekPoin();
     ambilApp();
     cekInstalledWA();
+    cekAyatDanSuratTerakhir();
+    cekPoin();
   }
 
   Future<void> cekAyatDanSuratTerakhir() async {
@@ -79,11 +89,96 @@ class ControllerListApps extends GetxController {
   }
 
   Future<void> ambilApp() async {
+    var allow = [
+      'gojek',
+      'meet',
+      'rosalia',
+      'mahasiswa',
+      'maxim',
+      'ojek',
+      'google',
+      'maps',
+      'linkedin',
+      'camera',
+      'kamera',
+      'foto',
+      'play store',
+      'classroom',
+      'canva',
+      'message',
+      'satusehat',
+      'setelan',
+      'spotify',
+      'whatsapp',
+      'grab',
+      'gopartner',
+      'gobiz',
+      'gopay',
+      'goagent',
+      'indrive',
+      'mail',
+      'radio',
+    ];
+
+    var notallow = [
+      'vpn',
+      'opera',
+      'uc',
+      'nekopoi',
+      'yandex',
+      'duckduckgo',
+      'terabox',
+      'vidmate',
+      'launcher',
+    ];
+
     apps.value = await DeviceApps.getInstalledApplications(
       onlyAppsWithLaunchIntent: true,
       includeSystemApps: true,
     );
+
     apps.sort((a, b) => a.appName.compareTo(b.appName));
+    allowApps.value = [];
+    notallowApps.value = [];
+
+    for (var i = 0; i < apps.length; i++) {
+      allowApps.add(false);
+      notallowApps.add(false);
+      for (var n = 0; n < allow.length; n++) {
+        if (apps[i]
+            .appName
+            .toString()
+            .toUpperCase()
+            .contains(allow[n].toString().toUpperCase())) {
+          allowApps[i] = true;
+        }
+      }
+      for (var x = 0; x < notallow.length; x++) {
+        if (apps[i]
+            .appName
+            .toString()
+            .toUpperCase()
+            .contains(notallow[x].toString().toUpperCase())) {
+          notallowApps[i] = true;
+        }
+      }
+    }
+
+    // print(notallowApps.length);
+    // print(apps.length);
+  }
+
+  Future<bool> cekKategori(i) async {
+    var kat = ['productivity', 'undefined'];
+    var allow = false;
+
+    kat.map(
+      (e) => {
+        if (apps[i].category.toString().contains(e)) {allow = true},
+      },
+    );
+
+    return allow;
   }
 
   Future<void> cekInstalledWA() async {
@@ -109,6 +204,8 @@ class ControllerQuran extends GetxController {
   var speechEn = false.obs;
   var kataAkhir = ''.obs;
 
+  final ControllerListApps cApps = Get.put(ControllerListApps());
+
   @override
   void onInit() {
     // Get called when controller is created
@@ -126,25 +223,59 @@ class ControllerQuran extends GetxController {
   }
 
   void onSpeechResult(SpeechRecognitionResult result) {
-    if (result.recognizedWords != '') {
+    if (result.recognizedWords != '' && result.finalResult) {
       kataAkhir.value = result.recognizedWords;
-      var ayat = listSuratDipilih[ayatDipilih.value -= 1]['teksLatin'];
+      var ayat = listSuratDipilih[ayatDipilih.value]['teksLatin'];
       analisa(ayat);
     }
   }
 
-  void analisa(ayat) {
-    var hasil = kataAkhir.value.similarityTo(ayat);
-    prinhasil(hasil);
+  void tambahPoin() async {
+    const storage = FlutterSecureStorage();
+    await storage.write(key: 'poin', value: cApps.poinSt.value);
   }
 
-  void prinhasil(has) {
-    print("$has || ${kataAkhir.value} ||");
+  void terakhirbaca() async {
+    const storage = FlutterSecureStorage();
+    await storage.write(key: 'ayat', value: cApps.ayatSt.value);
+    await storage.write(key: 'surat', value: cApps.suratSt.value);
+  }
+
+  void analisa(ayat) {
+    // replaceAll(RegExp('[^A-Za-z]'), '')
+    var ayatProses = removeDiacritics(ayat)
+        .toUpperCase()
+        .replaceAll(RegExp('[^A-Za-z]'), '');
+    var input =
+        kataAkhir.value.toUpperCase().replaceAll(RegExp('[^A-Za-z]'), '');
+    var hasil = input.similarityTo(ayatProses);
+    prinhasil(hasil, input, ayatProses);
+  }
+
+  void prinhasil(has, input, ayat) {
+    if (has >= 0.65) {
+      var poin = int.tryParse(cApps.poinSt.value)! + 1;
+      cApps.poinSt.value = (poin).toString();
+
+      tambahPoin();
+      terakhirbaca();
+
+      Fluttertoast.showToast(
+        msg: "Poin Berhasil Ditambah!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    //print("$has || $input || $ayat");
   }
 
   void stopListening() async {
     await speechToText.stop();
-    print('berhenti');
+    //print('berhenti');
   }
 
   void bacaJsonSurah() async {

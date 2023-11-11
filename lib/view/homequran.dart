@@ -1,11 +1,9 @@
 // ignore_for_file: file_names
 
-import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:muslim_launcher/controller/global_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:muslim_launcher/view/bacaAlQuran.dart';
 import 'package:muslim_launcher/view/riwayatbaca.dart';
 import 'package:muslim_launcher/view/riwayatpenggunaan.dart';

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:muslim_launcher/controller/global_controller.dart';
-import 'package:muslim_launcher/view/bacaSurat.dart';
 
 class RiwayatPenggunaan extends StatelessWidget {
   const RiwayatPenggunaan({super.key});

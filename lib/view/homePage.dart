@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:muslim_launcher/view/bacaAlQuran.dart';
 import 'package:muslim_launcher/view/homequran.dart';
 import 'package:muslim_launcher/view/menuApps.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -121,7 +120,7 @@ class WidgetJumlahPoin extends StatelessWidget {
 
     return Center(
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           color: Color(0xFF32B641),
           borderRadius: BorderRadius.all(Radius.circular(14)),
@@ -265,7 +264,7 @@ class WidgetCardMisi extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 28),
