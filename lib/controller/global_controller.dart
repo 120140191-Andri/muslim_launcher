@@ -17,10 +17,15 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'dart:math';
 
 class ControllerWaktu extends GetxController {
   var jamSekarang = DateFormat('h:mm a').format(DateTime.now()).obs;
   var tglSekarang = DateFormat('E, d MMM y').format(DateTime.now()).obs;
+
+  var misiSurah = ''.obs;
+  var poinSurah = 0.obs;
+  var statusMisi = ''.obs;
 
   @override
   void onReady() {
@@ -30,6 +35,25 @@ class ControllerWaktu extends GetxController {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       jamSekarang.value = DateFormat('h:mm a').format(DateTime.now());
       tglSekarang.value = DateFormat('E, d MMM y').format(DateTime.now());
+
+      if (jamSekarang.value == '12:00 AM') {
+        final ControllerQuran cQuran = Get.put(ControllerQuran());
+        Random random = Random();
+        int randomNumber = random.nextInt(1);
+
+        if (randomNumber == 1) {
+          Random ran = Random();
+          int rand = ran.nextInt(113);
+
+          misiSurah.value = cQuran.listSurah[rand]['namaLatin'];
+          poinSurah.value = cQuran.listSurah[rand]['jumlahAyat'];
+          statusMisi.value = 'berjalan';
+        } else {
+          misiSurah.value = '';
+          poinSurah.value = 0;
+          statusMisi.value = '';
+        }
+      }
     });
   }
 }
@@ -42,6 +66,8 @@ class ControllerListApps extends GetxController {
   RxString suratSt = ''.obs;
   RxList allowApps = [].obs;
   RxList notallowApps = [].obs;
+  RxList riwayatBaca = [].obs;
+  RxList riwayatPoin = [].obs;
 
   // @override
   // void onInit() {
@@ -57,6 +83,8 @@ class ControllerListApps extends GetxController {
     cekInstalledWA();
     cekAyatDanSuratTerakhir();
     cekPoin();
+    cekRiwayatBaca();
+    cekRiwayatPoin();
   }
 
   Future<void> cekAyatDanSuratTerakhir() async {
@@ -85,6 +113,28 @@ class ControllerListApps extends GetxController {
       await storage.write(key: 'poin', value: '0');
     } else {
       poinSt.value = poin;
+    }
+  }
+
+  Future<void> cekRiwayatBaca() async {
+    const storage = FlutterSecureStorage();
+    String? data = await storage.read(key: 'riwayatBaca');
+
+    if (data == null) {
+      await storage.write(key: 'riwayatBaca', value: jsonEncode([]));
+    } else {
+      riwayatBaca.value = jsonDecode(data);
+    }
+  }
+
+  Future<void> cekRiwayatPoin() async {
+    const storage = FlutterSecureStorage();
+    String? data = await storage.read(key: 'riwayatPoin');
+
+    if (data == null) {
+      await storage.write(key: 'riwayatPoin', value: jsonEncode([]));
+    } else {
+      riwayatPoin.value = jsonDecode(data);
     }
   }
 
@@ -239,6 +289,36 @@ class ControllerQuran extends GetxController {
     const storage = FlutterSecureStorage();
     await storage.write(key: 'ayat', value: cApps.ayatSt.value);
     await storage.write(key: 'surat', value: cApps.suratSt.value);
+  }
+
+  void tambahRiwayatBaca(surat, ayat, poin) async {
+    const storage = FlutterSecureStorage();
+    var listAwal = cApps.riwayatBaca;
+
+    var tambah = {
+      'surat': surat,
+      'ayat': ayat,
+      'poin': poin,
+    };
+
+    listAwal.add(tambah);
+
+    await storage.write(key: 'riwayatBaca', value: jsonEncode(listAwal));
+  }
+
+  void tambahRiwayatPoin(app, tgl, poin) async {
+    const storage = FlutterSecureStorage();
+    var listAwal = cApps.riwayatPoin;
+
+    var tambah = {
+      'app': app,
+      'tgl': tgl,
+      'poin': poin,
+    };
+
+    listAwal.add(tambah);
+
+    await storage.write(key: 'riwayatPoin', value: jsonEncode(listAwal));
   }
 
   void analisa(ayat) {

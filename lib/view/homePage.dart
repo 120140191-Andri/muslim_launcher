@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(context) {
     final ukuranLayar = MediaQuery.of(context).size;
+    final ControllerWaktu cWaktu = Get.put(ControllerWaktu());
 
     const SystemUiOverlayStyle systemUiOverlayStyle =
         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -57,7 +58,14 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 30),
                 const WidgetCardHistoryAyat(),
                 const SizedBox(height: 20),
-                const WidgetCardMisi(),
+                Obx(
+                  () => cWaktu.misiSurah.value != ''
+                      ? const WidgetCardMisi()
+                      : const SizedBox(
+                          height: 140,
+                          width: 240,
+                        ),
+                ),
                 SizedBox(
                   height: ukuranLayar.height - 760,
                   width: ukuranLayar.width,
@@ -202,7 +210,7 @@ class WidgetCardHistoryAyat extends StatelessWidget {
             Obx(
               () => cApps.suratSt.value != ''
                   ? Text(
-                      '${cApps.suratSt.value}(${cApps.ayatSt.value})',
+                      '${cApps.suratSt.value} (${cApps.ayatSt.value})',
                       style: GoogleFonts.montserrat(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -231,6 +239,7 @@ class WidgetCardMisi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ControllerListApps cApps = Get.put(ControllerListApps());
+    final ControllerWaktu cWaktu = Get.put(ControllerWaktu());
 
     return GestureDetector(
       onTap: () {
@@ -268,21 +277,25 @@ class WidgetCardMisi extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 28),
-            Text(
-              'Bacalah 1 Surah',
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+            Obx(
+              () => Text(
+                'Bacalah 1 Surah ${cWaktu.misiSurah.value}',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              'Bonus: 3 Poin',
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
+            Obx(
+              () => Text(
+                'Bonus: ${cWaktu.poinSurah.value} Poin',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],

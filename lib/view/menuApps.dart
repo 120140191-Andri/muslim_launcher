@@ -4,6 +4,7 @@ import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:muslim_launcher/controller/global_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -13,6 +14,7 @@ class MenuApps extends StatelessWidget {
   @override
   Widget build(Object context) {
     final ControllerListApps cApps = Get.put(ControllerListApps());
+    final ControllerQuran cQuran = Get.put(ControllerQuran());
 
     return Scaffold(
       body: SafeArea(
@@ -42,6 +44,12 @@ class MenuApps extends StatelessWidget {
                                 if (poin >= 1) {
                                   cApps.poinSt.value = (poin - 1).toString();
                                   DeviceApps.openApp(cApps.apps[i].packageName);
+                                  cQuran.tambahRiwayatPoin(
+                                      cApps.apps[i].appName.toString(),
+                                      DateFormat("dd-MM-yyyy | hh:mm")
+                                          .format(DateTime.now())
+                                          .toString(),
+                                      1);
                                 } else {
                                   Fluttertoast.showToast(
                                     msg: "Poin Anda Kurang!",

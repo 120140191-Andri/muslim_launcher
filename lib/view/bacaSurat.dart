@@ -135,6 +135,10 @@ class BacaSurat extends StatelessWidget {
                                     cApps.ayatSt.value = cQuran
                                         .listSuratDipilih[i]['nomorAyat']
                                         .toString();
+                                    cQuran.tambahRiwayatBaca(
+                                        cQuran.namaLatinSuratDipilih.value,
+                                        cQuran.listSuratDipilih[i]['nomorAyat'],
+                                        1);
                                   },
                                   icon: const Icon(Icons.mic_none_sharp),
                                   label: const Text('Baca'),
