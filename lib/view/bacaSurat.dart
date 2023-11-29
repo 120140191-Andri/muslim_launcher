@@ -122,28 +122,45 @@ class BacaSurat extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 20),
-                              Center(
-                                child: TextButton.icon(
-                                  onPressed: () {
-                                    cQuran.selesaiBaca(
-                                      cQuran.nomorSuratDipilih,
-                                      cQuran.listSuratDipilih[i]['nomorAyat'] -
-                                          1,
-                                    );
-                                    cApps.suratSt.value =
-                                        cQuran.namaLatinSuratDipilih.value;
-                                    cApps.ayatSt.value = cQuran
-                                        .listSuratDipilih[i]['nomorAyat']
-                                        .toString();
-                                    cQuran.tambahRiwayatBaca(
-                                        cQuran.namaLatinSuratDipilih.value,
-                                        cQuran.listSuratDipilih[i]['nomorAyat'],
-                                        1);
-                                  },
-                                  icon: const Icon(Icons.mic_none_sharp),
-                                  label: const Text('Baca'),
-                                ),
-                              )
+                              Obx(() => cQuran.mendengarkan.value == true
+                                  ? Center(
+                                      child: TextButton.icon(
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.mic_none_sharp,
+                                          color: Colors.red,
+                                        ),
+                                        label: const Text(
+                                          'Mendengarkan...',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    )
+                                  : Center(
+                                      child: TextButton.icon(
+                                        onPressed: () {
+                                          cQuran.selesaiBaca(
+                                            cQuran.nomorSuratDipilih,
+                                            cQuran.listSuratDipilih[i]
+                                                    ['nomorAyat'] -
+                                                1,
+                                          );
+                                          cApps.suratSt.value = cQuran
+                                              .namaLatinSuratDipilih.value;
+                                          cApps.ayatSt.value = cQuran
+                                              .listSuratDipilih[i]['nomorAyat']
+                                              .toString();
+                                          cQuran.tambahRiwayatBaca(
+                                              cQuran
+                                                  .namaLatinSuratDipilih.value,
+                                              cQuran.listSuratDipilih[i]
+                                                  ['nomorAyat'],
+                                              1);
+                                        },
+                                        icon: const Icon(Icons.mic_none_sharp),
+                                        label: const Text('Baca'),
+                                      ),
+                                    ))
                             ],
                           ),
                         ],

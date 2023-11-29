@@ -249,6 +249,7 @@ class ControllerQuran extends GetxController {
   RxList listSuratDipilih = [].obs;
   var suratDipilih = 0.obs;
   var ayatDipilih = 0.obs;
+  var mendengarkan = false.obs;
 
   SpeechToText speechToText = SpeechToText();
   var speechEn = false.obs;
@@ -269,14 +270,22 @@ class ControllerQuran extends GetxController {
   }
 
   void startListening() async {
+    mendengarkan.value = true;
     await speechToText.listen(onResult: onSpeechResult);
+    Timer(const Duration(seconds: 3), () {
+      mendengarkan.value = false;
+    });
   }
 
   void onSpeechResult(SpeechRecognitionResult result) {
-    if (result.recognizedWords != '' && result.finalResult) {
-      kataAkhir.value = result.recognizedWords;
-      var ayat = listSuratDipilih[ayatDipilih.value]['teksLatin'];
-      analisa(ayat);
+    mendengarkan.value = true;
+    if (result.finalResult) {
+      mendengarkan.value = false;
+      if (result.recognizedWords != '') {
+        kataAkhir.value = result.recognizedWords;
+        var ayat = listSuratDipilih[ayatDipilih.value]['teksLatin'];
+        analisa(ayat);
+      }
     }
   }
 
@@ -330,10 +339,11 @@ class ControllerQuran extends GetxController {
         kataAkhir.value.toUpperCase().replaceAll(RegExp('[^A-Za-z]'), '');
     var hasil = input.similarityTo(ayatProses);
     prinhasil(hasil, input, ayatProses);
+    mendengarkan.value = false;
   }
 
   void prinhasil(has, input, ayat) {
-    if (has >= 0.65) {
+    if (has >= 0.1) {
       var poin = int.tryParse(cApps.poinSt.value)! + 1;
       cApps.poinSt.value = (poin).toString();
 
@@ -356,6 +366,7 @@ class ControllerQuran extends GetxController {
   void stopListening() async {
     await speechToText.stop();
     //print('berhenti');
+    mendengarkan.value = false;
   }
 
   void bacaJsonSurah() async {
