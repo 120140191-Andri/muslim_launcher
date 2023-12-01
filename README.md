@@ -1,17 +1,9 @@
 # muslim_launcher
 
-A new Flutter project.
+Adalah aplikasi Launcher yang mengharuskan pengguna membaca al-quran ketika ingin membuka aplikasi social media, game, dan lain lain
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+code ini bersifat open source anda dapat mengembangkan aplikasi versi anda sendiri,
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# muslim_launcher" 
+jika ingin berdonasi ke developer: https://saweria.co/TheDev
