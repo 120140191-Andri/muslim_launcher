@@ -36,24 +36,24 @@ class ControllerWaktu extends GetxController {
       jamSekarang.value = DateFormat('h:mm a').format(DateTime.now());
       tglSekarang.value = DateFormat('E, d MMM y').format(DateTime.now());
 
-      if (jamSekarang.value == '12:00 AM') {
-        final ControllerQuran cQuran = Get.put(ControllerQuran());
-        Random random = Random();
-        int randomNumber = random.nextInt(1);
+      // if (jamSekarang.value == '12:00 AM') {
+      //   final ControllerQuran cQuran = Get.put(ControllerQuran());
+      //   Random random = Random();
+      //   int randomNumber = random.nextInt(1);
 
-        if (randomNumber == 1) {
-          Random ran = Random();
-          int rand = ran.nextInt(113);
+      //   if (randomNumber == 1) {
+      //     Random ran = Random();
+      //     int rand = ran.nextInt(113);
 
-          misiSurah.value = cQuran.listSurah[rand]['namaLatin'];
-          poinSurah.value = cQuran.listSurah[rand]['jumlahAyat'];
-          statusMisi.value = 'berjalan';
-        } else {
-          misiSurah.value = '';
-          poinSurah.value = 0;
-          statusMisi.value = '';
-        }
-      }
+      //     misiSurah.value = cQuran.listSurah[rand]['namaLatin'];
+      //     poinSurah.value = cQuran.listSurah[rand]['jumlahAyat'];
+      //     statusMisi.value = 'berjalan';
+      //   } else {
+      //     misiSurah.value = '';
+      //     poinSurah.value = 0;
+      //     statusMisi.value = '';
+      //   }
+      // }
     });
   }
 }
@@ -114,6 +114,11 @@ class ControllerListApps extends GetxController {
     } else {
       poinSt.value = poin;
     }
+  }
+
+  Future<void> setPoin() async {
+    const storage = FlutterSecureStorage();
+    await storage.write(key: 'poin', value: poinSt.value);
   }
 
   Future<void> cekRiwayatBaca() async {
@@ -343,12 +348,13 @@ class ControllerQuran extends GetxController {
   }
 
   void prinhasil(has, input, ayat) {
-    if (has >= 0.1) {
+    if (has >= 0.2) {
       var poin = int.tryParse(cApps.poinSt.value)! + 1;
       cApps.poinSt.value = (poin).toString();
 
       tambahPoin();
       terakhirbaca();
+      cApps.setPoin();
 
       Fluttertoast.showToast(
         msg: "Poin Berhasil Ditambah!",

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:muslim_launcher/controller/global_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MenuApps extends StatelessWidget {
   const MenuApps({super.key});
@@ -26,6 +27,24 @@ class MenuApps extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Obx(() => Text('Poinmu: ${cApps.poinSt.value}')),
             ),
+            GestureDetector(
+              onTap: () async {
+                final Uri url = Uri.parse('https://saweria.co/TheDev');
+                if (!await launchUrl(url)) {
+                  throw Exception('Could not launch $url');
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: const Row(
+                  children: [
+                    Icon(Icons.logo_dev),
+                    SizedBox(width: 20),
+                    Text('Donasi Ke Developer'),
+                  ],
+                ),
+              ),
+            ),
             Expanded(
               child: Obx(
                 () => ListView.builder(
@@ -43,6 +62,7 @@ class MenuApps extends StatelessWidget {
                                 var poin = int.tryParse(cApps.poinSt.value)!;
                                 if (poin >= 1) {
                                   cApps.poinSt.value = (poin - 1).toString();
+                                  cApps.setPoin();
                                   DeviceApps.openApp(cApps.apps[i].packageName);
                                   cQuran.tambahRiwayatPoin(
                                       cApps.apps[i].appName.toString(),
