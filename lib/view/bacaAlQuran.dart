@@ -35,6 +35,7 @@ class BacaAlQuran extends StatelessWidget {
                   itemBuilder: (BuildContext context, int i) {
                     return GestureDetector(
                       onTap: () {
+                        cQuran.mendengarkan.value = false;
                         cQuran.setSuratDipilih(cQuran.listSurah[i]['nomor']);
                         Get.to(() => const BacaSurat());
                       },
