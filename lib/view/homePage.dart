@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

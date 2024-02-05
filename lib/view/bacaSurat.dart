@@ -40,7 +40,9 @@ class BacaSurat extends StatelessWidget {
                         vertical: 20,
                         horizontal: 10,
                       ),
-                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -76,7 +78,8 @@ class BacaSurat extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   SizedBox(
-                                    width: 350,
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
                                     child: AutoSizeText(
                                       cQuran.listSuratDipilih[i]['teksArab'],
                                       style: const TextStyle(
@@ -94,7 +97,8 @@ class BacaSurat extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 350,
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
                                     child: AutoSizeText(
                                       cQuran.listSuratDipilih[i]['teksLatin'],
                                       style: const TextStyle(
@@ -111,7 +115,8 @@ class BacaSurat extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: 350,
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
                                     child: AutoSizeText(
                                       cQuran.listSuratDipilih[i]
                                           ['teksIndonesia'],
@@ -122,10 +127,32 @@ class BacaSurat extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 20),
-                              Obx(() => cQuran.mendengarkan.value == true
+                              Obx(() => cQuran.mendengarkan.value == true &&
+                                      cApps.ayatSt.value ==
+                                          cQuran.listSuratDipilih[i]
+                                                  ['nomorAyat']
+                                              .toString()
                                   ? Center(
                                       child: TextButton.icon(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          cQuran.selesaiBaca(
+                                            cQuran.nomorSuratDipilih,
+                                            cQuran.listSuratDipilih[i]
+                                                    ['nomorAyat'] -
+                                                1,
+                                          );
+                                          cApps.suratSt.value = cQuran
+                                              .namaLatinSuratDipilih.value;
+                                          cApps.ayatSt.value = cQuran
+                                              .listSuratDipilih[i]['nomorAyat']
+                                              .toString();
+                                          cQuran.tambahRiwayatBaca(
+                                              cQuran
+                                                  .namaLatinSuratDipilih.value,
+                                              cQuran.listSuratDipilih[i]
+                                                  ['nomorAyat'],
+                                              1);
+                                        },
                                         icon: const Icon(
                                           Icons.mic_none_sharp,
                                           color: Colors.red,

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:ffi';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +13,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -28,34 +30,159 @@ class ControllerWaktu extends GetxController {
   var statusMisi = ''.obs;
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
+    const storage = FlutterSecureStorage();
+    String? isDefaultApp = await storage.read(key: 'isDefaultApp');
+
+    if (isDefaultApp == null) {
+      _dialogBuilder();
+    } else {
+      _dialogBuilder2();
+    }
+
     // Get called when controller is created
     super.onReady();
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      jamSekarang.value = DateFormat('h:mm a').format(DateTime.now());
-      tglSekarang.value = DateFormat('E, d MMM y').format(DateTime.now());
+    // Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   jamSekarang.value = DateFormat('h:mm a').format(DateTime.now());
+    //   tglSekarang.value = DateFormat('E, d MMM y').format(DateTime.now());
 
-      // if (jamSekarang.value == '12:00 AM') {
-      //   final ControllerQuran cQuran = Get.put(ControllerQuran());
-      //   Random random = Random();
-      //   int randomNumber = random.nextInt(1);
+    //   // if (jamSekarang.value == '12:00 AM') {
+    //   //   final ControllerQuran cQuran = Get.put(ControllerQuran());
+    //   //   Random random = Random();
+    //   //   int randomNumber = random.nextInt(1);
 
-      //   if (randomNumber == 1) {
-      //     Random ran = Random();
-      //     int rand = ran.nextInt(113);
+    //   //   if (randomNumber == 1) {
+    //   //     Random ran = Random();
+    //   //     int rand = ran.nextInt(113);
 
-      //     misiSurah.value = cQuran.listSurah[rand]['namaLatin'];
-      //     poinSurah.value = cQuran.listSurah[rand]['jumlahAyat'];
-      //     statusMisi.value = 'berjalan';
-      //   } else {
-      //     misiSurah.value = '';
-      //     poinSurah.value = 0;
-      //     statusMisi.value = '';
-      //   }
-      // }
-    });
+    //   //     misiSurah.value = cQuran.listSurah[rand]['namaLatin'];
+    //   //     poinSurah.value = cQuran.listSurah[rand]['jumlahAyat'];
+    //   //     statusMisi.value = 'berjalan';
+    //   //   } else {
+    //   //     misiSurah.value = '';
+    //   //     poinSurah.value = 0;
+    //   //     statusMisi.value = '';
+    //   //   }
+    //   // }
+    // });
   }
+}
+
+Future<void> _dialogBuilder() {
+  return showDialog<void>(
+    context: Get.context!,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AlertDialog(
+              title: const Text(
+                  'Setting Muslim Launcher Sebagai Aplikasi Default'),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(11))),
+              content: Column(
+                children: [
+                  const Text(
+                    'Pilih Aplikasi Muslim Launcher Lalu Kembali',
+                  ),
+                  const Divider(),
+                  Image.asset(
+                    'assets/img/tutor.jpg',
+                  ),
+                  const Divider(),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                    backgroundColor: const Color(0xFF32B641),
+                  ),
+                  child: const Text(
+                    'Ok',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    const storage = FlutterSecureStorage();
+
+                    await storage.write(key: 'isDefaultApp', value: 'true');
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+
+                    const intent = AndroidIntent(
+                      action: 'android.settings.HOME_SETTINGS',
+                    );
+                    intent.launch();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Future<void> _dialogBuilder2() {
+  return showDialog<void>(
+    context: Get.context!,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AlertDialog(
+              title: const Text(
+                  'Setting Muslim Launcher Sebagai Aplikasi Default'),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(11))),
+              content: Column(
+                children: [
+                  const Text(
+                    'Pilih Aplikasi Muslim Launcher Lalu Kembali',
+                  ),
+                  const Divider(),
+                  Image.asset(
+                    'assets/img/tutor.jpg',
+                  ),
+                  const Divider(),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                    backgroundColor: const Color(0xFF32B641),
+                  ),
+                  child: const Text(
+                    'Ok',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    const storage = FlutterSecureStorage();
+
+                    await storage.write(key: 'isDefaultApp', value: 'true');
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+
+                    const intent = AndroidIntent(
+                      action: 'android.settings.HOME_SETTINGS',
+                    );
+                    intent.launch();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 class ControllerListApps extends GetxController {
@@ -68,24 +195,6 @@ class ControllerListApps extends GetxController {
   RxList notallowApps = [].obs;
   RxList riwayatBaca = [].obs;
   RxList riwayatPoin = [].obs;
-
-  // @override
-  // void onInit() {
-  //   // Get called when controller is created
-  //   super.onInit();
-  // }
-
-  @override
-  void onReady() {
-    super.onReady();
-
-    ambilApp();
-    cekInstalledWA();
-    cekAyatDanSuratTerakhir();
-    cekPoin();
-    cekRiwayatBaca();
-    cekRiwayatPoin();
-  }
 
   Future<void> cekAyatDanSuratTerakhir() async {
     const storage = FlutterSecureStorage();
@@ -239,6 +348,19 @@ class ControllerListApps extends GetxController {
   Future<void> cekInstalledWA() async {
     bool isInstalled = await DeviceApps.isAppInstalled('com.whatsapp');
     waApps.value = isInstalled;
+  }
+
+  @override
+  void onInit() {
+    ambilApp();
+    cekInstalledWA();
+    cekAyatDanSuratTerakhir();
+    cekPoin();
+    cekRiwayatBaca();
+    cekRiwayatPoin();
+
+    // Get called when controller is created
+    super.onInit();
   }
 }
 
