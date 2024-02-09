@@ -13,6 +13,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:reading_time/reading_time.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -351,7 +352,7 @@ class ControllerListApps extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onReady() {
     ambilApp();
     cekInstalledWA();
     cekAyatDanSuratTerakhir();
@@ -360,7 +361,7 @@ class ControllerListApps extends GetxController {
     cekRiwayatPoin();
 
     // Get called when controller is created
-    super.onInit();
+    super.onReady();
   }
 }
 
@@ -377,6 +378,8 @@ class ControllerQuran extends GetxController {
   var suratDipilih = 0.obs;
   var ayatDipilih = 0.obs;
   var mendengarkan = false.obs;
+  var dalamHati = false.obs;
+  var persentaseDalamHati = 0.0.obs;
 
   SpeechToText speechToText = SpeechToText();
   var speechEn = false.obs;
@@ -386,10 +389,10 @@ class ControllerQuran extends GetxController {
 
   @override
   void onInit() {
-    // Get called when controller is created
-    super.onInit();
     bacaJsonSurah();
     initSpeech();
+    // Get called when controller is created
+    super.onInit();
   }
 
   void initSpeech() async {
@@ -470,13 +473,19 @@ class ControllerQuran extends GetxController {
   }
 
   void prinhasil(has, input, ayat) {
-    if (has >= 0.2) {
+    // print(ayat);
+    // print(input);
+
+    if (has >= 0.5) {
       var poin = int.tryParse(cApps.poinSt.value)! + 1;
       cApps.poinSt.value = (poin).toString();
 
       tambahPoin();
       terakhirbaca();
       cApps.setPoin();
+
+      tambahRiwayatBaca(namaLatinSuratDipilih.value,
+          listSuratDipilih[ayatDipilih.value]['nomorAyat'], 1);
 
       Fluttertoast.showToast(
         msg: "Poin Berhasil Ditambah!",
@@ -522,5 +531,47 @@ class ControllerQuran extends GetxController {
   void selesaiBaca(noSurat, noAyat) async {
     ayatDipilih.value = noAyat;
     startListening();
+  }
+
+  void selesaiBacaDalamHati(noSurat, noAyat) async {
+    ayatDipilih.value = noAyat;
+    persentaseDalamHati.value = 0;
+
+    var reader = readingTime(listSuratDipilih[noAyat]['teksArab'], wpm: 44);
+    var waktuBaca = (reader.minutes * 60) * 1000;
+
+    dalamHati.value = true;
+
+    const oneSec = Duration(milliseconds: 1);
+    var waktu = 0;
+    Timer.periodic(oneSec, (Timer timer) {
+      if (waktu > waktuBaca) {
+        timer.cancel();
+
+        var poin = int.tryParse(cApps.poinSt.value)! + 1;
+        cApps.poinSt.value = (poin).toString();
+        tambahPoin();
+        terakhirbaca();
+        cApps.setPoin();
+
+        tambahRiwayatBaca(namaLatinSuratDipilih.value,
+            listSuratDipilih[ayatDipilih.value]['nomorAyat'], 1);
+
+        dalamHati.value = false;
+
+        Fluttertoast.showToast(
+          msg: "Poin Berhasil Ditambah!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        persentaseDalamHati.value = (waktu / waktuBaca);
+        waktu += 1;
+      }
+    });
   }
 }

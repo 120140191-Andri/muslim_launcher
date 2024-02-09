@@ -52,6 +52,8 @@ dependencies:
   change_app_package_name: ^1.1.0
   android_intent_plus: ^4.0.3
   restart_app: ^1.2.1
+  reading_time: ^2.0.0
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
