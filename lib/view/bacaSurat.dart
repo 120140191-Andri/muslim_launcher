@@ -12,45 +12,45 @@ import 'package:percent_indicator/percent_indicator.dart';
 class BacaSurat extends StatelessWidget {
   const BacaSurat({super.key});
 
-  Future<void> _bacaDalamHati() {
-    final ControllerQuran cQuran = Get.put(ControllerQuran());
+  // Future<void> _bacaDalamHati() {
+  //   final ControllerQuran cQuran = Get.put(ControllerQuran());
 
-    return showDialog<void>(
-      context: Get.context!,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AlertDialog(
-                title: Text('Baca ${cQuran.namaLatinSuratDipilih}'),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(11))),
-                content: Column(
-                  children: [
-                    Text(
-                      cQuran.listSuratDipilih[cQuran.nomorSuratDipilih.value]
-                          ['teksArab'],
-                      style: const TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold),
-                      maxLines: 3,
-                      textAlign: TextAlign.end,
-                    ),
-                    const Divider(),
-                    Image.asset(
-                      'assets/img/tutor.jpg',
-                    ),
-                    const Divider(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //   return showDialog<void>(
+  //     context: Get.context!,
+  //     barrierDismissible: true,
+  //     builder: (BuildContext context) {
+  //       return Center(
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             AlertDialog(
+  //               title: Text('Baca ${cQuran.namaLatinSuratDipilih}'),
+  //               shape: const RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.all(Radius.circular(11))),
+  //               content: Column(
+  //                 children: [
+  //                   Text(
+  //                     cQuran.listSuratDipilih[cQuran.nomorSuratDipilih.value]
+  //                         ['teksArab'],
+  //                     style: const TextStyle(
+  //                         fontSize: 22, fontWeight: FontWeight.bold),
+  //                     maxLines: 3,
+  //                     textAlign: TextAlign.end,
+  //                   ),
+  //                   const Divider(),
+  //                   Image.asset(
+  //                     'assets/img/tutor.jpg',
+  //                   ),
+  //                   const Divider(),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(Object context) {
