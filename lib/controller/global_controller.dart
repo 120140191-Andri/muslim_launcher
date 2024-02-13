@@ -177,6 +177,19 @@ Future<void> _dialogBuilder2() {
                     intent.launch();
                   },
                 ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text(
+                    'Tutup',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                ),
               ],
             ),
           ],
@@ -283,6 +296,31 @@ class ControllerListApps extends GetxController {
       'indrive',
       'mail',
       'radio',
+      'KAI',
+      'BPOM',
+      'Buku',
+      'CCTV',
+      'Zoom',
+      'by.U',
+      'umma',
+      'Studio',
+      'Pengaturan',
+      'Pesan',
+      'PowerPoint',
+      'Share',
+      'QR',
+      'Scanner',
+      'Reader',
+      'PDF',
+      'PeduliLindungi',
+      'Pelacakan',
+      'Mengajar',
+      'Telkomsel',
+      'My',
+      'Kontak',
+      'Guru',
+      'Jam',
+      'Kalender',
     ];
 
     var notallow = [
@@ -295,6 +333,7 @@ class ControllerListApps extends GetxController {
       'terabox',
       'vidmate',
       'launcher',
+      'Avast Secure',
     ];
 
     apps.value = await DeviceApps.getInstalledApplications(

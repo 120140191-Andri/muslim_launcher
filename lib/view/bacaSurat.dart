@@ -79,10 +79,12 @@ class BacaSurat extends StatelessWidget {
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20,
-                        horizontal: 10,
                       ),
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 10,
+                      margin: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10,
                       ),
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -114,23 +116,16 @@ class BacaSurat extends StatelessWidget {
                           ),
                           Column(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width - 80,
-                                    child: AutoSizeText(
-                                      cQuran.listSuratDipilih[i]['teksArab'],
-                                      style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                      maxLines: 1000,
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width - 100,
+                                child: AutoSizeText(
+                                  cQuran.listSuratDipilih[i]['teksArab'],
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 1000,
+                                  textAlign: TextAlign.end,
+                                ),
                               ),
                               const SizedBox(height: 20),
                               Row(
@@ -139,7 +134,7 @@ class BacaSurat extends StatelessWidget {
                                 children: [
                                   SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width - 80,
+                                        MediaQuery.of(context).size.width - 100,
                                     child: AutoSizeText(
                                       cQuran.listSuratDipilih[i]['teksLatin'],
                                       style: const TextStyle(
@@ -157,7 +152,7 @@ class BacaSurat extends StatelessWidget {
                                 children: [
                                   SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width - 80,
+                                        MediaQuery.of(context).size.width - 100,
                                     child: AutoSizeText(
                                       cQuran.listSuratDipilih[i]
                                           ['teksIndonesia'],
@@ -263,9 +258,11 @@ class BacaSurat extends StatelessWidget {
                                             ),
                                           )
                                         : Center(
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 30),
+                                            child: SizedBox(
+                                              // margin:
+                                              //     const EdgeInsets.symmetric(
+                                              //   horizontal: 10,
+                                              // ),
                                               child: Row(
                                                 children: [
                                                   TextButton.icon(
@@ -348,7 +345,7 @@ class BacaSurat extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                              )
+                              ),
                             ],
                           ),
                         ],
